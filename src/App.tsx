@@ -16,10 +16,6 @@ import {
 import { levels, Operations } from "./bf-runtime/levels";
 import { BFRuntime } from "./bf-runtime/bf";
 
-//TODO: Levels must have
-// 1) list of permitted operations, or a predicate to determine if it's permitted
-// 2) expected state that is to achieve. it will allow to go to another level
-
 function SingleLevel({
   description,
   operations,
