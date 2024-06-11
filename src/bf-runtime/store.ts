@@ -18,6 +18,7 @@ export const moveLeft = () => useBFStore.setState(bf.moveLeft);
 export const moveRight = () => useBFStore.setState(bf.moveRight);
 
 export const performOperation = (operation: Operations) => {
+  new Audio("/click2.wav").play();
   switch (operation) {
     case "increment":
       increment();
@@ -37,6 +38,10 @@ export const performOperation = (operation: Operations) => {
     case "moveRight":
       moveRight();
       break;
+    default:
+      if (Array.isArray(operation)) {
+        performChunk(operation);
+      }
   }
 };
 

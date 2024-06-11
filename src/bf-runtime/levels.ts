@@ -7,7 +7,8 @@ export type Operations =
   | "write"
   | "read"
   | "moveLeft"
-  | "moveRight"; // Add loops, add macros
+  | "moveRight"
+  | Operations[];
 
 export type Level = {
   operations: Operations[];
