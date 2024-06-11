@@ -11,6 +11,8 @@ function App() {
 
   const currentLevel = levels[level];
 
+  const nextLevel = levels[level + 1];
+
   return isPlaying ? (
     <SingleLevel
       description={currentLevel.description}
@@ -18,14 +20,14 @@ function App() {
       isCompleted={currentLevel.isExpectedStateReached}
       onComplete={() => setIsPlaying(false)}
     />
-  ) : levels[level + 1] ? (
+  ) : nextLevel ? (
     <div>
       Good Job!
       <button
         onClick={() => {
           setLevel(level + 1);
           setIsPlaying(true);
-          setRuntime(levels[level + 1].initialState);
+          setRuntime(nextLevel.initialState);
         }}
       >
         Let's do it again
