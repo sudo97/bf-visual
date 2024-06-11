@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-
 import "./App.css";
+import { useEffect, useState } from "react";
 import {
   BFRuntime,
   decrement,
@@ -11,34 +10,13 @@ import {
   read,
   write,
 } from "./bf-runtime/bf";
+import { IO } from "./IO";
+import { Tape } from "./Tape";
+import { ArrowLeft, ArrowRight } from "./Arrows";
 
 //TODO: Levels must have
 // 1) list of permitted operations, or a predicate to determine if it's permitted
 // 2) expected state that is to achieve. it will allow to go to another level
-
-function Tape({ runtime }: { runtime: BFRuntime }) {
-  return (
-    <div className="tape" key={runtime.pointer}>
-      <span>
-        {
-          runtime.tape[
-            (runtime.pointer - 1 + runtime.tape.length) % runtime.tape.length
-          ]
-        }
-      </span>
-      <span className="currentCell">{runtime.tape[runtime.pointer]}</span>
-      <span>{runtime.tape[(runtime.pointer + 1) % runtime.tape.length]}</span>
-    </div>
-  );
-}
-
-function ArrowLeft() {
-  return <div style={{ fontSize: "2rem" }}>&larr;</div>;
-}
-
-function ArrowRight() {
-  return <div style={{ fontSize: "2rem" }}>&rarr;</div>;
-}
 
 function App() {
   const [runtime, setRuntime] = useState<BFRuntime>(() =>
@@ -76,18 +54,6 @@ function App() {
         <Tape runtime={runtime} />
         <ArrowRight />
       </div>
-    </div>
-  );
-}
-
-function IO({ array }: { array: number[] }) {
-  return (
-    <div className="io-item">
-      [
-      {array.map((val, i) => (
-        <div key={i}>{val}</div>
-      ))}
-      ]
     </div>
   );
 }
