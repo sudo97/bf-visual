@@ -1,60 +1,116 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import {
-  BFRuntime,
-  decrement,
-  increment,
-  initRuntime,
-  moveLeft,
-  moveRight,
-  read,
-  write,
-} from "./bf-runtime/bf";
 import { IO } from "./IO";
 import { Tape } from "./Tape";
 import { ArrowLeft, ArrowRight } from "./Arrows";
+import {
+  moveLeft,
+  useBFStore,
+  decrement,
+  increment,
+  read,
+  write,
+  moveRight,
+  setRuntime,
+} from "./bf-runtime/store";
+import { levels, Operations } from "./bf-runtime/levels";
+import { BFRuntime } from "./bf-runtime/bf";
 
 //TODO: Levels must have
 // 1) list of permitted operations, or a predicate to determine if it's permitted
 // 2) expected state that is to achieve. it will allow to go to another level
 
-function App() {
-  const [runtime, setRuntime] = useState<BFRuntime>(() =>
-    initRuntime([1, 2, 3])
-  );
+function SingleLevel({
+  description,
+  operations,
+  isCompleted,
+  onComplete,
+}: {
+  description: string;
+  operations: Operations[];
+  isCompleted: (runtime: BFRuntime) => boolean;
+  onComplete: () => void;
+}) {
+  const runtime = useBFStore();
+
+  const [gameOn, setGameOn] = useState<boolean>(true);
 
   useEffect(() => {
     function keyHandler(e: KeyboardEvent) {
-      if (e.key === "ArrowLeft") {
-        setRuntime(moveLeft);
-      } else if (e.key === "ArrowRight") {
-        setRuntime(moveRight);
-      } else if (e.key === "ArrowUp") {
-        setRuntime(increment);
-      } else if (e.key === "ArrowDown") {
-        setRuntime(decrement);
-      } else if (e.key === "r") {
-        setRuntime(read);
-      } else if (e.key === "w") {
-        setRuntime(write);
+      if (!gameOn) return;
+      if (e.key === "ArrowLeft" && operations.includes("moveLeft")) {
+        moveLeft();
+      } else if (e.key === "ArrowRight" && operations.includes("moveRight")) {
+        moveRight();
+      } else if (e.key === "ArrowUp" && operations.includes("increment")) {
+        increment();
+      } else if (e.key === "ArrowDown" && operations.includes("decrement")) {
+        decrement();
+      } else if (e.key === "r" && operations.includes("read")) {
+        read();
+      } else if (e.key === "w" && operations.includes("write")) {
+        write();
       }
     }
 
     window.addEventListener("keydown", keyHandler);
     return () => window.removeEventListener("keydown", keyHandler);
-  }, []);
+  }, [operations, gameOn]);
+
+  useEffect(() => {
+    if (isCompleted(runtime)) {
+      setGameOn(false);
+      setTimeout(() => {
+        onComplete();
+      }, 1000);
+    }
+  }, [runtime, isCompleted, onComplete]);
+
   return (
     <div className="app">
       <div className="io">
         <IO array={runtime.stdin} />
         <IO array={runtime.stdout} />
       </div>
+      <div className="description">{description}</div>
       <div className="runtime-repr">
         <ArrowLeft />
-        <Tape runtime={runtime} />
+        <Tape isSuccess={!gameOn} />
         <ArrowRight />
       </div>
     </div>
+  );
+}
+
+function App() {
+  const [level, setLevel] = useState<number>(0);
+
+  const [isPlaying, setIsPlaying] = useState<boolean>(true);
+
+  const currentLevel = levels[level];
+
+  return isPlaying ? (
+    <SingleLevel
+      description={currentLevel.description}
+      operations={currentLevel.operations}
+      isCompleted={currentLevel.isExpectedStateReached}
+      onComplete={() => setIsPlaying(false)}
+    />
+  ) : levels[level + 1] ? (
+    <div>
+      Good Job!
+      <button
+        onClick={() => {
+          setLevel(level + 1);
+          setIsPlaying(true);
+          setRuntime(levels[level + 1].initialState);
+        }}
+      >
+        Let's do it again
+      </button>
+    </div>
+  ) : (
+    <div>You're all done!</div>
   );
 }
 
