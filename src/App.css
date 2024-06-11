@@ -4,6 +4,9 @@
   text-align: center;
 }
 
+.tape .currentCell {
+  border-color: rgb(255, 226, 226);
+}
 .currentCell {
   font-weight: bolder;
 }
