@@ -39,9 +39,7 @@ export const performOperation = (operation: Operations) => {
       moveRight();
       break;
     default:
-      if (Array.isArray(operation)) {
-        performChunk(operation);
-      }
+      break;
   }
 };
 
