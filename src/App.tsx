@@ -24,6 +24,7 @@ function App() {
     <div>
       Good Job!
       <button
+        ref={(item) => item?.focus()}
         onClick={() => {
           setLevel(level + 1);
           setIsPlaying(true);
