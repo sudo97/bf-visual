@@ -18,6 +18,19 @@ export type Level = {
 
 export const levels: Level[] = [
   {
+    operations: [
+      "increment",
+      "moveRight",
+      "moveLeft",
+      "decrement",
+      "read",
+      "write",
+    ],
+    isExpectedStateReached: () => false,
+    description: "This is a freestyle level",
+    initialState: initRuntime([]),
+  },
+  {
     operations: ["increment"],
     isExpectedStateReached: (runtime) =>
       runtime.tape[runtime.pointer] === 1 && runtime.pointer === 0,
