@@ -3,18 +3,18 @@ import { useEffect, useState } from "react";
 import { IO } from "./IO";
 import { Tape } from "./Tape";
 import { ArrowLeft, ArrowRight } from "./Arrows";
-import {
-  moveLeft,
-  useBFStore,
-  decrement,
-  increment,
-  read,
-  write,
-  moveRight,
-  setRuntime,
-} from "./bf-runtime/store";
+import { useBFStore, setRuntime, performOperation } from "./bf-runtime/store";
 import { levels, Operations } from "./bf-runtime/levels";
 import { BFRuntime } from "./bf-runtime/bf";
+
+const keyToOperationMap: { [key: string]: Operations | undefined } = {
+  ArrowUp: "increment",
+  ArrowDown: "decrement",
+  ArrowLeft: "moveLeft",
+  ArrowRight: "moveRight",
+  w: "write",
+  r: "read",
+};
 
 function SingleLevel({
   description,
@@ -34,18 +34,9 @@ function SingleLevel({
   useEffect(() => {
     function keyHandler(e: KeyboardEvent) {
       if (!gameOn) return;
-      if (e.key === "ArrowLeft" && operations.includes("moveLeft")) {
-        moveLeft();
-      } else if (e.key === "ArrowRight" && operations.includes("moveRight")) {
-        moveRight();
-      } else if (e.key === "ArrowUp" && operations.includes("increment")) {
-        increment();
-      } else if (e.key === "ArrowDown" && operations.includes("decrement")) {
-        decrement();
-      } else if (e.key === "r" && operations.includes("read")) {
-        read();
-      } else if (e.key === "w" && operations.includes("write")) {
-        write();
+      const operation = keyToOperationMap[e.key];
+      if (operation && operations.includes(operation)) {
+        performOperation(operation);
       }
     }
 
