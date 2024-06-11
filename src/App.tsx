@@ -65,8 +65,8 @@ function SingleLevel({
   return (
     <div className="app">
       <div className="io">
-        <IO array={runtime.stdin} />
-        <IO array={runtime.stdout} />
+        <IO array={runtime.stdin} label="STDIN" />
+        <IO array={runtime.stdout} label="STDOUT" />
       </div>
       <div className="description">{description}</div>
       <div className="runtime-repr">

@@ -69,7 +69,7 @@ export const levels: Level[] = [
   {
     operations: ["write", "increment"],
     description:
-      "Press W to write the value from the STDIN on your left, try to write the number 13",
+      "Press W to write the value to the STDOUT on your right, try to write the number 13",
     isExpectedStateReached: (runtime) => runtime.stdout[0] === 13,
     initialState: initRuntime([]),
   },
