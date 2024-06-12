@@ -11,12 +11,6 @@ export type Level = {
 
 export const levels: Level[] = [
   {
-    operations: ["+", ">", "<", "-", ".", ",", "[", "]"],
-    isExpectedStateReached: () => false,
-    description: "This is a freestyle level",
-    initialState: initRuntime([]),
-  },
-  {
     operations: ["+"],
     isExpectedStateReached: (runtime) =>
       runtime.tape[runtime.pointer] === 1 && runtime.pointer === 0,
@@ -78,5 +72,23 @@ export const levels: Level[] = [
       "Read two numbers from the input, add them together, and write the result",
     isExpectedStateReached: (runtime) => runtime.stdout[0] === 8,
     initialState: initRuntime([3, 5]),
+  },
+  {
+    operations: ["+", ">", "<", "-", ".", ",", "[", "]"],
+    description: `Now let's do a loop. Hit [ to start entering the loop, put your operations and then ].
+      Operations within [ and ] will be executing until current box is not 0.
+      If you make a mistake, you can hit escape and the loop will be dropped.
+      Try to make a loop that will turn this number into 0.
+      `,
+    isExpectedStateReached: (runtime) => runtime.tape[0] === 0,
+    initialState: produce(initRuntime([]), (r) => {
+      r.tape[0] = 50;
+    }),
+  },
+  {
+    operations: ["+", ">", "<", "-", ".", ",", "[", "]"],
+    isExpectedStateReached: () => false,
+    description: "This is a freestyle level, do whatever you want here!",
+    initialState: initRuntime([]),
   },
 ];
