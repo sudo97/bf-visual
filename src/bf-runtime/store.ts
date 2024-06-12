@@ -1,47 +1,55 @@
 import { create } from "zustand";
 import * as bf from "./bf";
 import { BFRuntime, initRuntime } from "./bf";
-import { Operations } from "./levels";
+import { AST } from "./compiler";
 
 export const useBFStore = create<BFRuntime>()(() => initRuntime([]));
 
-export const increment = () => useBFStore.setState(bf.increment);
+const increment = () => useBFStore.setState(bf.increment);
 
-export const decrement = () => useBFStore.setState(bf.decrement);
+const decrement = () => useBFStore.setState(bf.decrement);
 
-export const write = () => useBFStore.setState(bf.write);
+const write = () => useBFStore.setState(bf.write);
 
-export const read = () => useBFStore.setState(bf.read);
+const read = () => useBFStore.setState(bf.read);
 
-export const moveLeft = () => useBFStore.setState(bf.moveLeft);
+const moveLeft = () => useBFStore.setState(bf.moveLeft);
 
-export const moveRight = () => useBFStore.setState(bf.moveRight);
+const moveRight = () => useBFStore.setState(bf.moveRight);
 
-export const performOperation = (operation: Operations) => {
-  new Audio("/click2.wav").play();
-  switch (operation) {
-    case "increment":
+export const performOperation = async (ast: AST) => {
+  switch (ast.tag) {
+    case "+":
       increment();
       break;
-    case "decrement":
+    case "-":
       decrement();
       break;
-    case "write":
+    case ",":
       write();
       break;
-    case "read":
+    case ".":
       read();
       break;
-    case "moveLeft":
+    case "<":
       moveLeft();
       break;
-    case "moveRight":
+    case ">":
       moveRight();
       break;
+    case "[":
+      break;
+    case "]":
+      break;
     default:
+      ast satisfies never;
       break;
   }
 };
 
+// const sleep = (ms: number) => new Promise<void>((res) => setTimeout(res, ms));
+
 export const setRuntime = (runtime: BFRuntime) =>
   useBFStore.setState(() => runtime);
+
+// TODO: Use me within the store for single items, also for accumulated loop, or its balanced part

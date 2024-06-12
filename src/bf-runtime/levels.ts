@@ -1,17 +1,9 @@
 import { produce } from "immer";
 import { BFRuntime, initRuntime } from "./bf";
-
-export type Operations =
-  | "increment"
-  | "decrement"
-  | "write"
-  | "read"
-  | "moveLeft"
-  | "moveRight"
-  | Operations[];
+import { Token } from "./compiler";
 
 export type Level = {
-  operations: Operations[];
+  operations: Token[];
   isExpectedStateReached: (runtime: BFRuntime) => boolean;
   description: string;
   initialState: BFRuntime;
@@ -19,34 +11,27 @@ export type Level = {
 
 export const levels: Level[] = [
   {
-    operations: [
-      "increment",
-      "moveRight",
-      "moveLeft",
-      "decrement",
-      "read",
-      "write",
-    ],
+    operations: ["+", ">", "<", "-", ".", ",", "[", "]"],
     isExpectedStateReached: () => false,
     description: "This is a freestyle level",
     initialState: initRuntime([]),
   },
   {
-    operations: ["increment"],
+    operations: ["+"],
     isExpectedStateReached: (runtime) =>
       runtime.tape[runtime.pointer] === 1 && runtime.pointer === 0,
     description: "Press Arrow Up to increment the value at the current cell",
     initialState: initRuntime([]),
   },
   {
-    operations: ["decrement"],
+    operations: ["-"],
     isExpectedStateReached: (runtime) =>
       runtime.tape[runtime.pointer] === -1 && runtime.pointer === 0,
     description: "Press Arrow Down to decrement the value at the current cell",
     initialState: initRuntime([]),
   },
   {
-    operations: ["moveRight"],
+    operations: [">"],
     isExpectedStateReached: (runtime) => runtime.pointer === 1,
     description: "Press Arrow Right to move to the next cell",
     initialState: produce(initRuntime([]), (r) => {
@@ -54,7 +39,7 @@ export const levels: Level[] = [
     }),
   },
   {
-    operations: ["moveLeft"],
+    operations: ["<"],
     isExpectedStateReached: (runtime) =>
       runtime.pointer === runtime.tape.length - 1,
     description: "Press Arrow Left to move to the previous cell",
@@ -63,7 +48,7 @@ export const levels: Level[] = [
     }),
   },
   {
-    operations: ["moveLeft", "moveRight", "increment", "decrement"],
+    operations: ["<", ">", "+", "-"],
     description:
       "Try adding these two numbers together, decrement one, then increment another, until the first one is 0",
     isExpectedStateReached: (runtime) =>
@@ -74,28 +59,21 @@ export const levels: Level[] = [
     }),
   },
   {
-    operations: ["read", "decrement"],
+    operations: [".", "-"],
     description:
       "Press R to read a value from the STDIN on your left, then decrement it",
     isExpectedStateReached: (runtime) => runtime.tape[0] === 98765,
     initialState: initRuntime([98766]),
   },
   {
-    operations: ["write", "increment"],
+    operations: [",", "+"],
     description:
       "Press W to write the value to the STDOUT on your right, try to write the number 13",
     isExpectedStateReached: (runtime) => runtime.stdout[0] === 13,
     initialState: initRuntime([]),
   },
   {
-    operations: [
-      "read",
-      "write",
-      "increment",
-      "decrement",
-      "moveLeft",
-      "moveRight",
-    ],
+    operations: [".", ",", "+", "-", "<", ">"],
     description:
       "Read two numbers from the input, add them together, and write the result",
     isExpectedStateReached: (runtime) => runtime.stdout[0] === 8,
