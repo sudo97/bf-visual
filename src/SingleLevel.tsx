@@ -4,7 +4,7 @@ import { performOperation, useBFStore } from "./bf-runtime/store";
 import { IO } from "./IO";
 import { ArrowLeft, ArrowRight } from "./Arrows";
 import { Tape } from "./Tape";
-import { AST, Token, compile, isBalanced } from "./bf-runtime/compiler";
+import { Token, compile, isBalanced } from "./bf-runtime/compiler";
 
 const keyToOperationMap: { [key: string]: Token | undefined } = {
   ArrowUp: "+",
@@ -67,27 +67,32 @@ export function SingleLevel({
         setInLoop(false);
         return;
       }
+
       const operation = keyToOperationMap[e.key];
       if (operation && operations.includes(operation)) {
-        if (operation === "[") {
-          setInLoop(true);
-          setLoopBuffer(["["]);
-        } else if (operation === "]" && isBalanced([...loopBuffer, "]"])) {
-          setInLoop(false);
-          setLoopBuffer([...loopBuffer, "]"]);
-          for (const op of executeWithLoops([...loopBuffer, "]"])) {
-            op();
-            new Audio("/click2.wav").play();
-            await new Promise((resolve) => setTimeout(resolve, 100));
-          }
-          setLoopBuffer([]);
-          setLastKey(undefined);
-        } else {
-          if (inLoop) {
-            setLoopBuffer([...loopBuffer, operation]);
+        if (inLoop) {
+          if (operation === "]" && isBalanced([...loopBuffer, "]"])) {
+            setInLoop(false);
+            setLoopBuffer([...loopBuffer, "]"]);
+            setGameOn(false);
+            for (const op of executeWithLoops([...loopBuffer, "]"])) {
+              op();
+              new Audio("/click2.wav").play();
+              await new Promise((resolve) => setTimeout(resolve, 100));
+            }
+            setGameOn(true);
+            setLoopBuffer([]);
+            setLastKey(undefined);
           } else {
+            setLoopBuffer([...loopBuffer, operation]);
+          }
+        } else {
+          if (operation === "[") {
+            setInLoop(true);
+            setLoopBuffer(["["]);
+          } else if (operation !== "]") {
             setLastKey(operation);
-            performOperation({ tag: operation } as AST);
+            performOperation({ tag: operation });
           }
         }
       }
@@ -115,7 +120,7 @@ export function SingleLevel({
       <div className="description">{description}</div>
       <div className="runtime-repr">
         <ArrowLeft />
-        <Tape isSuccess={!gameOn} />
+        <Tape isSuccess={isCompleted(runtime)} />
         <ArrowRight />
       </div>
       <div className="loop-buffer">
