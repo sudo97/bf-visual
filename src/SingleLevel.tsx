@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { BFRuntime } from "./bf-runtime/bf";
-import { performOperation, useBFStore } from "./bf-runtime/store";
+import {
+  executeWithLoops,
+  performOperation,
+  useBFStore,
+} from "./bf-runtime/store";
 import { IO } from "./IO";
 import { ArrowLeft, ArrowRight } from "./Arrows";
 import { Tape } from "./Tape";
-import { Token, compile, isBalanced } from "./bf-runtime/compiler";
+import { Token, isBalanced } from "./bf-runtime/compiler";
 
 const keyToOperationMap: { [key: string]: Token | undefined } = {
   ArrowUp: "+",
@@ -16,27 +20,6 @@ const keyToOperationMap: { [key: string]: Token | undefined } = {
   "[": "[",
   "]": "]",
 };
-
-// TODO create mechanism to stop execution
-function* executeWithLoops(operations: Token[]) {
-  const program = compile(operations);
-
-  let i = 0;
-  while (i < program.length) {
-    const item = program[i];
-    if (item.tag === "[") {
-      if (useBFStore.getState().tape[useBFStore.getState().pointer] === 0) {
-        i = item.pos;
-      }
-    } else if (item.tag === "]") {
-      if (useBFStore.getState().tape[useBFStore.getState().pointer] !== 0) {
-        i = item.pos;
-      }
-    }
-    yield () => performOperation(item);
-    i++;
-  }
-}
 
 export function SingleLevel({
   description,

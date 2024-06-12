@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import * as bf from "./bf";
 import { BFRuntime, initRuntime } from "./bf";
-import { AST } from "./compiler";
+import { AST, Token, compile } from "./compiler";
 
 export const useBFStore = create<BFRuntime>()(() => initRuntime([]));
 
@@ -47,9 +47,30 @@ export const performOperation = async (ast: AST) => {
   }
 };
 
-// const sleep = (ms: number) => new Promise<void>((res) => setTimeout(res, ms));
-
 export const setRuntime = (runtime: BFRuntime) =>
   useBFStore.setState(() => runtime);
 
-// TODO: Use me within the store for single items, also for accumulated loop, or its balanced part
+function isTrue() {
+  return useBFStore.getState().tape[useBFStore.getState().pointer] === 0;
+}
+
+// TODO create mechanism to stop execution
+export function* executeWithLoops(operations: Token[]) {
+  const program = compile(operations);
+
+  let i = 0;
+  while (i < program.length) {
+    const item = program[i];
+    if (item.tag === "[") {
+      if (isTrue()) {
+        i = item.pos;
+      }
+    } else if (item.tag === "]") {
+      if (!isTrue()) {
+        i = item.pos;
+      }
+    }
+    yield () => performOperation(item);
+    i++;
+  }
+}
