@@ -1,30 +1,16 @@
-# React + TypeScript + Vite
+# BF Runtime Simulator with Visuals
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a visual simulation of a theoretical processor, inspired by minimalist computational models like BF (IYKYK) and historical educational tools such as CARDIAC (Cardboard Illustrative Aid to Computation) and other paper computers. The simulator is designed to demonstrate the workings of a processor using a limited set of operations, providing an interactive and educational experience on how simple instructions can be orchestrated to perform complex tasks.
 
-Currently, two official plugins are available:
+## Technologies Used
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The simulator is built using React, TypeScript, and Vite. React provides the UI components, TypeScript offers type safety, and Vite ensures fast development with Hot Module Replacement (HMR). The project also utilizes ESLint to maintain code quality, configured specifically for TypeScript and React to ensure best practices.
 
-## Expanding the ESLint configuration
+- **React**: For building the user interface with component-based architecture.
+- **TypeScript**: Adds static types to JavaScript, enhancing code quality and readability.
+- **Vite**: A modern frontend build tool that significantly improves the development experience with features like instant server start and lightning-fast HMR.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Historical Context
 
-- Configure the top-level `parserOptions` property like this:
+The concept draws parallels to early educational computers like CARDIAC, which were used to teach the fundamentals of how computers operate. By simulating a BF runtime, users can engage with the core principles of computation—such as loops, conditionals, and memory management—in a controlled and visually appealing environment.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
