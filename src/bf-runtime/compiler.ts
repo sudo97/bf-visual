@@ -48,16 +48,16 @@ export function compile(tokens: Token[]): AST[] {
 }
 
 export function isBalanced(tokens: Token[]): boolean {
-  const loopStack: number[] = [];
+  let depthCounter: number = 0;
   for (const token of tokens) {
     if (token === "[") {
-      loopStack.push(0);
+      depthCounter++;
     } else if (token === "]") {
-      if (loopStack.length === 0) {
+      if (depthCounter === 0) {
         return false;
       }
-      loopStack.pop();
+      depthCounter--;
     }
   }
-  return loopStack.length === 0;
+  return depthCounter === 0;
 }
