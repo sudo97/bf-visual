@@ -17,6 +17,7 @@ const keyToOperationMap: { [key: string]: Token | undefined } = {
   "]": "]",
 };
 
+// TODO create mechanism to stop execution
 function* executeWithLoops(operations: Token[]) {
   const program = compile(operations);
 
