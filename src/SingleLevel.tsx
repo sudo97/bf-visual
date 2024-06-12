@@ -52,6 +52,8 @@ export function SingleLevel({
 
   const [gameOn, setGameOn] = useState<boolean>(true);
 
+  const [lastKey, setLastKey] = useState<string | undefined>();
+
   const [loopBuffer, setLoopBuffer] = useState<Token[]>([]);
 
   const [inLoop, setInLoop] = useState<boolean>(false);
@@ -79,10 +81,12 @@ export function SingleLevel({
             await new Promise((resolve) => setTimeout(resolve, 100));
           }
           setLoopBuffer([]);
+          setLastKey(undefined);
         } else {
           if (inLoop) {
             setLoopBuffer([...loopBuffer, operation]);
           } else {
+            setLastKey(operation);
             performOperation({ tag: operation } as AST);
           }
         }
@@ -114,9 +118,9 @@ export function SingleLevel({
         <Tape isSuccess={!gameOn} />
         <ArrowRight />
       </div>
-      {loopBuffer.length > 0 && (
-        <div className="loop-buffer">{loopBuffer.join(" ")}</div>
-      )}
+      <div className="loop-buffer">
+        {loopBuffer.length ? loopBuffer.join(" ") : lastKey}
+      </div>
     </div>
   );
 }
