@@ -2,7 +2,7 @@
 
 This project is a visual simulation of a theoretical processor, inspired by minimalist computational models like BF (IYKYK) and historical educational tools such as CARDIAC (Cardboard Illustrative Aid to Computation) and other paper computers. The simulator is designed to demonstrate the workings of a processor using a limited set of operations, providing an interactive and educational experience on how simple instructions can be orchestrated to perform complex tasks.
 
-[Play the game](https://eloquent-cupcake-6911c0.netlify.app/)
+[Play the game](https://bf-visual.netlify.app/)
 
 ## Technologies Used
 
